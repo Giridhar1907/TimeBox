@@ -2,19 +2,10 @@
 
 ![Platform](https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android)
 ![Language](https://img.shields.io/badge/Language-Kotlin-7F52FF?style=for-the-badge&logo=kotlin)
-![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)
 
 TimeBox is a sample Android application built to demonstrate a clean, modern, and robust passwordless authentication flow. It uses a locally generated One-Time Password (OTP) and is built entirely with **Jetpack Compose** and a state-driven **MVVM architecture**.
 
 This project serves as a reference for implementing best practices in modern Android development, including unidirectional data flow, clear separation of concerns, and effective handling of UI state and business logic without a backend.
-
----
-
-## Screenshots
-
-| Login Screen | OTP Input | Session Screen |
-| :---: | :---: | :---: |
-| *Your screenshot here* | *Your screenshot here* | *Your screenshot here* |
 
 
 ---
