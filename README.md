@@ -1,93 +1,101 @@
-# TimeBox: Passwordless Authentication App
+# TimeBox: A Modern Android Passwordless Auth Demo
 
-A simple and modern Android application demonstrating a passwordless authentication flow using a locally generated OTP (One-Time Password). The app is built with Jetpack Compose, Kotlin, and a clean, state-driven MVVM architecture.
+![Platform](https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android)
+![Language](https://img.shields.io/badge/Language-Kotlin-7F52FF?style=for-the-badge&logo=kotlin)
+![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)
 
-This project was designed to showcase best practices in modern Android development, including unidirectional data flow, clear separation of concerns, and robust handling of UI state and business logic.
+TimeBox is a sample Android application built to demonstrate a clean, modern, and robust passwordless authentication flow. It uses a locally generated One-Time Password (OTP) and is built entirely with **Jetpack Compose** and a state-driven **MVVM architecture**.
+
+This project serves as a reference for implementing best practices in modern Android development, including unidirectional data flow, clear separation of concerns, and effective handling of UI state and business logic without a backend.
+
+---
+
+## Screenshots
+
+| Login Screen | OTP Input | Session Screen |
+| :---: | :---: | :---: |
+| *Your screenshot here* | *Your screenshot here* | *Your screenshot here* |
+
 
 ---
 
 ## Features
 
-- **Email + OTP Login**: Secure login using a locally generated 6-digit OTP.
-- **Strict OTP Rules**: 
-    - **60-second** expiry timer.
-    - **3 maximum** validation attempts.
-    - Generating a new OTP invalidates the old one and resets the attempt counter.
-- **Live Session Screen**: After login, a session screen displays the start time and a live-updating session duration timer.
-- **State-Driven UI**: The entire UI is a function of the application's state, ensuring predictable and stable behavior.
-- **Robust Architecture**: A clear separation between the UI, ViewModel (business logic), and Data layers.
-- **Developer Logging**: Integrated **Timber** for structured logging of key authentication events. Includes helpers for debugging the in-memory OTP store.
-
-## Tech Stack & Architecture
-
-- **UI**: 100% Jetpack Compose.
-- **Architecture**: Model-View-ViewModel (MVVM)
-- **State Management**: `ViewModel` with `StateFlow` to manage and expose UI state.
-- **Asynchronous Operations**: Kotlin Coroutines for managing timers and other async tasks.
-- **Navigation**: Jetpack Compose Navigation for moving between screens.
-- **Logging**: Timber for structured and extensible logging.
-
-### Architectural Principles Adhered To:
-
-- **Single Source of Truth**: The `AuthViewModel` holds the state, which the UI observes.
-- **Unidirectional Data Flow**: State flows down from the ViewModel to the UI, and events flow up from the UI to the ViewModel.
-- **No UI Logic in ViewModels**: The ViewModel knows nothing about Composables or Android framework UI components.
-- **Encapsulated Business Logic**: All OTP rules are handled exclusively within the `OtpManager` in the data layer.
+- ✅ **100% Kotlin & Jetpack Compose**: A completely modern UI toolkit and language.
+- 🔐 **Passwordless OTP Login**: Secure login flow using a locally generated 6-digit OTP.
+- 🕒 **Strict OTP Rules**:
+    - **60-second** expiry timer for every OTP.
+    - **3 maximum** validation attempts before the OTP is invalidated.
+    - Requesting a new OTP automatically invalidates the old one.
+- 📈 **Live Session Tracking**: An active session screen that displays the session start time and a live-updating duration timer that survives configuration changes.
+- 🏗️ **Clean, State-Driven Architecture**: The UI is a direct function of the application's state, ensuring predictability and stability.
+- 🪵 **Developer-Focused Logging**: Integrated with **Timber** for structured logging of key auth events. Includes a debug function to inspect the in-memory OTP data store.
 
 ---
 
-## Setup and Usage Instructions
+## Architecture
+
+The application follows a well-defined **MVVM (Model-View-ViewModel)** architecture with a unidirectional data flow.
+
+```
+   [ UI Layer (Compose) ] <--- Observes State -- [ ViewModel ] ---> Interacts With --> [ Data Layer (Manager) ]
+           |                                        |                                        |
+      (LoginScreen,      (Holds AuthState &      (Handles OTP Logic &      
+       SessionScreen)       Business Logic)           In-Memory Store)
+           |
+           '---- Emits Events ----------------------->'
+```
+
+1.  **UI Layer (Views)**: Built with Jetpack Compose. Observes state changes from the `AuthViewModel` and emits user events (like button clicks).
+2.  **ViewModel Layer**: The `AuthViewModel` holds the application state (`AuthState`) as a `StateFlow`. It executes business logic and updates the state in response to UI events.
+3.  **Data Layer**: The `OtpManager` is a pure Kotlin class that encapsulates all data-related rules, such as OTP generation, storage, and validation.
+
+---
+
+## Key Concepts Demonstrated
+
+This project is a practical example of:
+
+- **State Management**: Using a `sealed class` (`AuthState`) to represent all possible UI states.
+- **State Hoisting**: Managing state at the highest logical level (`AuthViewModel`) and passing it down.
+- **Side-Effect Handling**: Using `LaunchedEffect` to handle one-time events like navigation and showing `Snackbars`.
+- **ViewModel & Coroutines**: Using `viewModelScope` to manage long-running tasks like timers, ensuring they are lifecycle-aware.
+- **Dependency Encapsulation**: Using a wrapper (`AnalyticsLogger`) to decouple the ViewModel from the specific logging library.
+- **Clean Architecture Principles**: A strict separation of concerns between UI, state, and data logic.
+
+---
+
+## Setup and Usage
 
 ### Prerequisites
+
 - Android Studio Iguana | 2023.2.1 or newer.
-- Git installed on your machine.
+- Git.
 
-### 1. Clone the Repository
+### Get Started
 
-Open your terminal and clone the project repository to your local machine:
+1.  **Clone the Repository**:
+    ```sh
+    git clone <repository-url>
+    ```
+2.  **Open in Android Studio**:
+    - Launch Android Studio.
+    - Select **Open** and navigate to the cloned project directory.
+    - Let Gradle sync and download all dependencies.
+3.  **Run the App**:
+    - Select the `app` run configuration.
+    - Choose a target device (emulator or physical).
+    - Click the **Run** button (▶️).
 
-```sh
-git clone <repository-url>
-```
+### How to Log In
 
-### 2. Open in Android Studio
+Because the app works locally, the OTP is shown to you for testing:
 
-- Launch Android Studio.
-- Select **Open an existing project**.
-- Navigate to the cloned `TimeBox` directory and open it.
-- Allow Android Studio to sync the Gradle files and download all dependencies.
-
-### 3. Build and Run
-
-Once the Gradle sync is complete, you can build and run the application on an emulator or a physical device directly from Android Studio.
-
-- Select a run configuration (usually `app`).
-- Choose a target device.
-- Click the **Run** button (▶️).
-
-### 4. How to Log In (Testing the Flow)
-
-Since this is a local-only implementation, the OTP is not sent to an actual email address. For testing purposes, the OTP is made available in two ways:
-
-1.  **Snackbar Notification**: After you enter an email and tap "Get OTP", a Snackbar will appear at the bottom of the screen for 3 seconds displaying the OTP (e.g., `OTP: 123456`).
-2.  **Logcat**: The OTP is also logged to **Logcat**. You can view this in Android Studio (`View > Tool Windows > Logcat`) by filtering for the `D/AnalyticsLogger` tag.
+1.  **Snackbar**: After requesting an OTP, a Snackbar will pop up for 3 seconds with the code.
+2.  **Logcat**: The OTP is also printed to **Logcat**, which you can view in Android Studio.
 
 ---
 
-## Project Structure
+## License
 
-```
-/app/src/main/java/com/example/timebox/
-├── analytics/
-│   └── AnalyticsLogger.kt  # Wrapper for the logging library (Timber).
-├── data/
-│   └── OtpManager.kt       # Handles all OTP generation, storage, and validation logic.
-├── ui/
-│   ├── LoginScreen.kt      # Composable for email input and OTP verification.
-│   └── SessionScreen.kt    # Composable for the active session view.
-├── viewmodel/
-│   ├── AuthState.kt        # Sealed classes defining all possible UI states.
-│   └── AuthViewModel.kt    # The brain of the app; holds state and business logic.
-├── MainActivity.kt         # Main entry point; handles navigation.
-└── TimeBoxApplication.kt   # Initializes analytics on app startup.
-```
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
