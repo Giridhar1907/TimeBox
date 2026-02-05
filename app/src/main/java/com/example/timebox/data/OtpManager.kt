@@ -1,5 +1,6 @@
 package com.example.timebox.data
 
+import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
 
@@ -44,6 +45,22 @@ class OtpManager {
             val remainingAttempts = MAX_ATTEMPTS - otpData.attempts
             return OtpVerificationResult.Failure.Incorrect(remainingAttempts)
         }
+    }
+
+    /**
+     * Logs the current state of the otpStore to Logcat for debugging.
+     */
+    fun logOtpStoreStateForDebugging() {
+        if (otpStore.isEmpty()) {
+            Timber.d("OtpStore is currently empty.")
+            return
+        }
+        Timber.d("--- Current OtpStore State ---")
+        otpStore.forEach { (email, data) ->
+            val elapsedTime = (System.currentTimeMillis() - data.creationTime) / 1000
+            Timber.d("  Email: %s | OTP: %s | Attempts: %d | Age: %ds", email, data.otp, data.attempts, elapsedTime)
+        }
+        Timber.d("----------------------------")
     }
 
     private fun isOtpExpired(otpData: OtpData): Boolean {

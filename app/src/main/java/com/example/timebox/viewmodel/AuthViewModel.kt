@@ -37,6 +37,9 @@ class AuthViewModel : ViewModel() {
         val otp = otpManager.generateOtp(email)
         analyticsLogger.logOtpGenerated(email, otp)
 
+        // For debugging: log the state of the OTP store.
+        otpManager.logOtpStoreStateForDebugging()
+
         viewModelScope.launch {
             _otpForNotification.emit(otp)
         }
@@ -51,6 +54,9 @@ class AuthViewModel : ViewModel() {
             is AuthState.OtpVerificationFailed -> state.email
             else -> return
         }
+
+        // For debugging: log the state of the OTP store before validation.
+        otpManager.logOtpStoreStateForDebugging()
 
         when (val result = otpManager.validateOtp(currentEmail, otp)) {
             is OtpVerificationResult.Success -> {
