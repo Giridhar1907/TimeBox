@@ -85,8 +85,3 @@ Because the app works locally, the OTP is shown to you for testing:
 1.  **Snackbar**: After requesting an OTP, a Snackbar will pop up for 3 seconds with the code.
 2.  **Logcat**: The OTP is also printed to **Logcat**, which you can view in Android Studio.
 
----
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
